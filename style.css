@@ -62,7 +62,7 @@ hr {
 }
 
 .debts-container {
-	width: 200px;
+	width: 500px;
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	border: none;
@@ -71,7 +71,7 @@ hr {
 }
 
 .debts-container2 {
-	width: 200px;
+	width: 500px;
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	padding: 5px 0;
