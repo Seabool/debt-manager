@@ -57,6 +57,7 @@ window.addEventListener('load', (event) => {
 		personListDisplay.innerHTML = '';
 		personList.getPersons().forEach((person) => {
 			let div = document.createElement('div');
+			div.classList.add('person-container');
 			let inputReason = document.createElement('input');
 			inputReason.type = 'text';
 			inputReason.id = 'debt-reason-' + person.getName();
@@ -80,22 +81,32 @@ window.addEventListener('load', (event) => {
 				false
 			);
 			let divInner = document.createElement('h2');
-			divInner.innerText = 'Debt: ' + person.getDebt();
+			divInner.innerText = 'Debt: ';
 			personListDisplay.appendChild(div);
 			let title = document.createElement('h1');
 			title.innerHTML = person.getName();
-			let hr = document.createElement('hr');
 			div.appendChild(title);
-			div.appendChild(divInner);
 			div.appendChild(inputReason);
 			div.appendChild(inputDebt);
 			div.appendChild(button);
+			div.appendChild(divInner);
+			let newDiv = document.createElement('div');
+			newDiv.classList.add('debts-container');
+			div.appendChild(newDiv);
 			person.getDebtList().forEach((elem) => {
-				let debtElem = document.createElement('h3');
-				debtElem.innerHTML = elem.reason + ' | ' + formatCurrency(parseFloat(elem.debt));
-				div.appendChild(debtElem);
+				let debtElem = document.createElement('div');
+				debtElem.innerHTML = formatCurrency(parseFloat(elem.debt));
+				newDiv.appendChild(debtElem);
+				let reasonElem = document.createElement('div');
+				reasonElem.innerHTML = elem.reason;
+				newDiv.appendChild(reasonElem);
 			});
-			div.appendChild(hr);
+			let newDiv2 = document.createElement('div');
+			newDiv2.classList.add('debts-container2');
+			div.appendChild(newDiv2);
+			let debtElem = document.createElement('div');
+			debtElem.innerHTML = formatCurrency(parseFloat(person.getDebt()));
+			newDiv2.appendChild(debtElem);
 		});
 		localStorage.setItem('personList', JSON.stringify(personList));
 	};
