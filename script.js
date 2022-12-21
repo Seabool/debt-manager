@@ -6,12 +6,26 @@ window.addEventListener('load', (event) => {
 			this.debtList = debtList || [];
 		}
 
+		calculateDebt() {
+			let newDebt = 0.0;
+			this.debtList.forEach((debt) => {
+				newDebt += parseFloat(debt.debt);
+			});
+			this.debt = newDebt;
+		}
+
 		addDebt(reason, debt) {
-			this.debt += parseFloat(debt);
-			this.debtList.push({ debt: debt, reason: reason });
+			this.debtList.push({ debt: debt, reason: reason, id: Date.now() });
+			this.calculateDebt();
+		}
+
+		removeDebtById(id) {
+			this.debtList = this.debtList.filter((e) => e.id !== id);
+			this.calculateDebt();
 		}
 
 		getDebt() {
+			this.calculateDebt();
 			return formatCurrency(this.debt);
 		}
 
@@ -85,7 +99,21 @@ window.addEventListener('load', (event) => {
 			personListDisplay.appendChild(div);
 			let title = document.createElement('h1');
 			title.innerHTML = person.getName();
-			div.appendChild(title);
+			let removePerson = document.createElement('button');
+			removePerson.innerHTML = 'Remove person';
+			removePerson.addEventListener(
+				'click',
+				function () {
+					personList.removePerson(person.getName());
+					displayPersonList();
+				},
+				false
+			);
+			title.appendChild(removePerson);
+			let titleDiv = document.createElement('div');
+			titleDiv.appendChild(title);
+			titleDiv.appendChild(removePerson);
+			div.appendChild(titleDiv);
 			div.appendChild(inputReason);
 			div.appendChild(inputDebt);
 			div.appendChild(button);
@@ -100,6 +128,18 @@ window.addEventListener('load', (event) => {
 				let reasonElem = document.createElement('div');
 				reasonElem.innerHTML = elem.reason;
 				newDiv.appendChild(reasonElem);
+				let removeDebt = document.createElement('button');
+				removeDebt.innerHTML = 'Remove';
+				removeDebt.id = 'remove-debt-' + elem.id;
+				newDiv.appendChild(removeDebt);
+				removeDebt.addEventListener(
+					'click',
+					function () {
+						person.removeDebtById(elem.id);
+						displayPersonList();
+					},
+					false
+				);
 			});
 			let newDiv2 = document.createElement('div');
 			newDiv2.classList.add('debts-container2');
@@ -116,17 +156,6 @@ window.addEventListener('load', (event) => {
 		function () {
 			const personName = document.getElementById('person-name').value;
 			personList.addPerson(new Person(personName));
-			displayPersonList();
-		},
-		false
-	);
-
-	document.getElementById('remove-person-button').addEventListener(
-		'click',
-		function () {
-			const personName = document.getElementById('person-name').value;
-
-			personList.removePerson(personName);
 			displayPersonList();
 		},
 		false
