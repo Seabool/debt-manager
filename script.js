@@ -189,8 +189,9 @@ window.addEventListener('load', (event) => {
 	document.getElementById('add-person-button').addEventListener(
 		'click',
 		function () {
-			const personName = document.getElementById('person-name').value;
-			personList.addPerson(new Person(personName));
+			let personNameInput = document.getElementById('person-name');
+			personList.addPerson(new Person(personNameInput.value));
+			personNameInput.value = '';
 			displayPersonList();
 		},
 		false
