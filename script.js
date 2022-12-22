@@ -15,7 +15,7 @@ window.addEventListener('load', (event) => {
 		}
 
 		addDebt(reason, debt) {
-			this.debtList.push({ debt: debt, reason: reason, id: Date.now() });
+			this.debtList.push({ debt: debt.replace(',', '.'), reason: reason, id: Date.now() });
 			this.calculateDebt();
 		}
 
@@ -70,37 +70,51 @@ window.addEventListener('load', (event) => {
 		const personListDisplay = document.getElementById('person-list');
 		personListDisplay.innerHTML = '';
 		personList.getPersons().forEach((person) => {
-			let div = document.createElement('div');
-			div.classList.add('person-container');
+			let personContainer = document.createElement('div');
+			personContainer.classList.add('person-container');
+
+			let inputDebtContainer = document.createElement('div');
+			inputDebtContainer.classList.add('add-debt-container');
+
 			let inputReason = document.createElement('input');
 			inputReason.type = 'text';
 			inputReason.id = 'debt-reason-' + person.getName();
 			inputReason.placeholder = 'Reason...';
+
 			let inputDebt = document.createElement('input');
 			inputDebt.type = 'text';
 			inputDebt.id = 'debt-value-' + person.getName();
 			inputDebt.placeholder = 'Debt...';
+			inputDebt.classList.add('add-debt-input');
+
 			let button = document.createElement('button');
-			button.innerHTML = 'Add debt';
+			button.innerHTML = '+';
 			button.id = 'add-debt-' + person.getName();
+			button.classList.add('add-debt-button');
 			button.addEventListener(
 				'click',
 				function () {
 					const debtValue = document.getElementById('debt-value-' + person.getName()).value;
 					const debtReason = document.getElementById('debt-reason-' + person.getName()).value;
-
 					person.addDebt(debtReason, debtValue);
 					displayPersonList();
 				},
 				false
 			);
-			let divInner = document.createElement('h2');
-			divInner.innerText = 'Debt: ';
-			personListDisplay.appendChild(div);
+
+			inputDebtContainer.appendChild(inputReason);
+			inputDebtContainer.appendChild(inputDebt);
+			inputDebtContainer.appendChild(button);
+
+			personListDisplay.appendChild(personContainer);
+
 			let title = document.createElement('h1');
 			title.innerHTML = person.getName();
+			title.classList.add('title-h1');
+
 			let removePerson = document.createElement('button');
-			removePerson.innerHTML = 'Remove person';
+			removePerson.innerHTML = '✖';
+			removePerson.classList.add('remove-person-button');
 			removePerson.addEventListener(
 				'click',
 				function () {
@@ -109,29 +123,39 @@ window.addEventListener('load', (event) => {
 				},
 				false
 			);
+
 			title.appendChild(removePerson);
+
 			let titleDiv = document.createElement('div');
+			titleDiv.classList.add('title-container');
 			titleDiv.appendChild(title);
 			titleDiv.appendChild(removePerson);
-			div.appendChild(titleDiv);
-			div.appendChild(inputReason);
-			div.appendChild(inputDebt);
-			div.appendChild(button);
-			div.appendChild(divInner);
+
 			let newDiv = document.createElement('div');
 			newDiv.classList.add('debts-container');
-			div.appendChild(newDiv);
+
 			person.getDebtList().forEach((elem) => {
-				let debtElem = document.createElement('div');
-				debtElem.innerHTML = formatCurrency(parseFloat(elem.debt));
-				newDiv.appendChild(debtElem);
+				let debtContainer = document.createElement('div');
+				debtContainer.classList.add('debt-container');
+
 				let reasonElem = document.createElement('div');
 				reasonElem.innerHTML = elem.reason;
-				newDiv.appendChild(reasonElem);
+
+				let debtElem = document.createElement('div');
+				debtElem.innerHTML = formatCurrency(parseFloat(elem.debt));
+				debtElem.classList.add('debt-value-container');
+
 				let removeDebt = document.createElement('button');
-				removeDebt.innerHTML = 'Remove';
+				removeDebt.innerHTML = '✖';
+				removeDebt.classList.add('remove-debt-button');
 				removeDebt.id = 'remove-debt-' + elem.id;
-				newDiv.appendChild(removeDebt);
+
+				debtContainer.appendChild(reasonElem);
+				debtContainer.appendChild(debtElem);
+				debtContainer.appendChild(removeDebt);
+
+				newDiv.appendChild(debtContainer);
+
 				removeDebt.addEventListener(
 					'click',
 					function () {
@@ -143,11 +167,22 @@ window.addEventListener('load', (event) => {
 			});
 			let newDiv2 = document.createElement('div');
 			newDiv2.classList.add('debts-container2');
-			div.appendChild(newDiv2);
+
+			personContainer.appendChild(titleDiv);
+			personContainer.appendChild(inputDebtContainer);
+			personContainer.appendChild(newDiv);
+			personContainer.appendChild(newDiv2);
+
+			let reasonElem = document.createElement('div');
+			reasonElem.innerHTML = 'Total:';
+
 			let debtElem = document.createElement('div');
-			debtElem.innerHTML = formatCurrency(parseFloat(person.getDebt()));
+			debtElem.innerHTML = formatCurrency(person.getDebt());
+
+			newDiv2.appendChild(reasonElem);
 			newDiv2.appendChild(debtElem);
 		});
+
 		localStorage.setItem('personList', JSON.stringify(personList));
 	};
 
