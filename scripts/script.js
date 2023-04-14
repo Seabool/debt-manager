@@ -142,7 +142,13 @@ window.addEventListener('load', (event) => {
 				reasonElem.innerHTML = elem.reason;
 
 				let debtElem = document.createElement('div');
-				debtElem.innerHTML = formatCurrency(parseFloat(elem.debt));
+				let debtValue = parseFloat(elem.debt);
+				debtElem.innerHTML = formatCurrency(debtValue);
+				if (debtValue < 0) {
+					debtElem.classList.add('debt-green');
+				} else {
+					debtElem.classList.add('debt-red');
+				}
 				debtElem.classList.add('debt-value-container');
 
 				let removeDebt = document.createElement('button');

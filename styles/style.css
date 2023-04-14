@@ -168,3 +168,11 @@ h1 {
 	justify-content: space-between;
 	padding: 20px;
 }
+
+.debt-red {
+	color: lightcoral;
+}
+
+.debt-green {
+	color: lightgreen;
+}
