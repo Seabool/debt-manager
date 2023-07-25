@@ -117,7 +117,7 @@ h1 {
 .debt-container {
 	border-bottom: 1px dashed #a19f9f;
 	display: flex;
-	padding: 10px 0px;
+	padding: 5px 5px;
 	align-items: center;
 	justify-content: space-between;
 	position: relative;
